@@ -1,0 +1,118 @@
+<!-- Scanning Progress -->
+{% include 'components/file_list/scanning_progress.html' %}
+
+<!-- File List Container -->
+<div x-show="!isLoading && files.length > 0" class="mt-6 card bg-base-100 shadow-xl">
+    <!-- View Mode and Filtering Controls -->
+    {% include 'components/file_list/file_list_controls.html' %}
+
+    <!-- Card View -->
+    <div x-show="viewMode === 'cards' && files && files.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <template x-for="file in files" :key="file.path">
+            <div class="card bg-base-200 shadow-sm hover:shadow transition-shadow">
+                <div class="card-body p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span 
+                            x-text="file.is_cloud_only ? 'Cloud Only' : 'Local'" 
+                            :class="file.is_cloud_only ? 'badge badge-info' : 'badge badge-success'"
+                        ></span>
+                        <span class="text-sm" x-text="file.human_size"></span>
+                    </div>
+                    <h3 class="font-medium truncate" x-text="file.name"></h3>
+                    <div class="text-sm opacity-70 truncate relative-folder-path" x-text="file.relative_folder_path"></div>
+                    <div class="card-actions justify-between mt-3">
+                        <template x-if="!file.is_cloud_only">
+                            <button 
+                                @click="freeUpSpace(file)"
+                                class="btn btn-sm btn-primary"
+                            >
+                                Free Space
+                            </button>
+                        </template>
+                        <button 
+                            @click="copyPathToClipboard(file.path)"
+                            class="btn btn-sm btn-ghost relative group"
+                            title="Copy full path to clipboard"
+                        >
+                            Copy Path
+                            <div class="absolute opacity-0 group-hover:opacity-100 bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 transition-opacity duration-300 mb-1 whitespace-nowrap">
+                                <span x-text="file.path"></span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- Table View -->
+    <div x-show="viewMode === 'table' && files && files.length > 0" class="overflow-x-auto">
+        <table class="table w-full table-zebra">
+            <thead>
+                <tr>
+                    <th>Folder</th>
+                    <th>Name</th>
+                    <th class="text-right">Size</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="file in files" :key="file.path">
+                    <tr>
+                        <td class="opacity-70"><span class="relative-folder-path" x-text="file.relative_folder_path"></span></td>
+                        <td class="max-w-xs">
+                            <div class="truncate max-w-[300px]" x-text="file.name"></div>
+                        </td>
+                        <td class="text-right" x-text="file.human_size"></td>
+                        <td class="text-center">
+                            <span 
+                                x-text="file.is_cloud_only ? 'Cloud Only' : 'Local'" 
+                                :class="file.is_cloud_only ? 'badge badge-info' : 'badge badge-success'"
+                            ></span>
+                        </td>
+                        <td class="text-center">
+                            <div class="flex justify-center space-x-2">
+                                <template x-if="!file.is_cloud_only">
+                                    <button 
+                                        @click="freeUpSpace(file)"
+                                        class="btn btn-sm btn-primary"
+                                    >
+                                        Free Space
+                                    </button>
+                                </template>
+                                <button 
+                                    @click="copyPathToClipboard(file.path)"
+                                    class="btn btn-sm btn-ghost relative group"
+                                    title="Copy full path to clipboard"
+                                >
+                                    Copy Path
+                                    <div class="absolute opacity-0 group-hover:opacity-100 bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 transition-opacity duration-300 mb-1 whitespace-nowrap">
+                                        <span x-text="file.path"></span>
+                                    </div>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Ultra Simple Pagination Controls -->
+    {% include 'components/file_list/ultra_simple_pagination.html' %}
+</div>
+
+<!-- No Files Found Message -->
+<div 
+    x-show="!isLoading && files.length === 0" 
+    class="mt-6 card bg-base-100 shadow-xl p-6 text-center"
+>
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>No files found. Try adjusting your scan parameters.</span>
+        </div>
+    </div>
+</div>
+

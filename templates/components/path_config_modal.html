@@ -1,0 +1,54 @@
+<!-- Path Configuration Modal using DaisyUI -->
+<input type="checkbox" id="path-config-modal" class="modal-toggle" :checked="showPathConfig" />
+<div class="modal" :class="showPathConfig ? 'modal-open' : ''">
+    <div class="modal-box relative">
+        <button @click="closePathConfig()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
+        
+        <h3 class="text-lg font-bold">Configure OneDrive Path</h3>
+        <p class="py-2 opacity-80">Please manually enter or paste the full path to your OneDrive folder.</p>
+        
+        <!-- Path Input -->
+        <div class="form-control w-full mt-2">
+            <label class="label">
+                <span class="label-text">OneDrive Path</span>
+            </label>
+            <input 
+                type="text" 
+                x-model="newOnedrivePath" 
+                class="input input-bordered w-full" 
+                placeholder="e.g., C:\Users\YourName\OneDrive"
+            />
+            <label class="label" x-show="configError">
+                <span class="label-text-alt text-error" x-text="configError"></span>
+            </label>
+        </div>
+        
+        <div class="mt-4">
+            <div class="collapse collapse-arrow border rounded-box">
+                <input type="checkbox" /> 
+                <div class="collapse-title text-sm font-medium">
+                    Common OneDrive paths and how to find yours
+                </div>
+                <div class="collapse-content text-sm opacity-80"> 
+                    <p>Common OneDrive paths:</p>
+                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                        <li>Personal: <code class="bg-base-300 px-1 rounded">C:\Users\YourName\OneDrive</code></li>
+                        <li>Business: <code class="bg-base-300 px-1 rounded">C:\Users\YourName\OneDrive - CompanyName</code></li>
+                    </ul>
+                    <p class="mt-2">To find your OneDrive folder path:</p>
+                    <ol class="list-decimal pl-5 mt-1 space-y-1">
+                        <li>Open File Explorer</li>
+                        <li>Navigate to your OneDrive folder</li>
+                        <li>Right-click on the address bar and select "Copy address as text"</li>
+                        <li>Paste the copied path in the field above</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-action">
+            <button @click="closePathConfig()" class="btn btn-outline">Cancel</button>
+            <button @click="updateOnedrivePath()" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>

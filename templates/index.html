@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneDrive Analyzer</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon/onedrive.svg') }}">
+    <!-- CSS files -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Removed virtualized-list.css as it's no longer needed -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table-fix.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    
+    <!-- Theme script -->
+    <script>
+        // Check for saved theme preference or use system preference
+        const savedTheme = localStorage.getItem('theme') || 
+                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-base-200" x-data="app()">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        {% include 'components/header.html' %}
+
+        <!-- Scan Options -->
+        {% include 'components/scan_options.html' %}
+
+        <!-- Summary Stats -->
+        {% include 'components/summary_stats.html' %}
+
+        <!-- File List -->
+        {% include 'components/file_list.html' %}
+
+        <!-- Path Configuration Modal -->
+        {% include 'components/path_config_modal.html' %}
+
+        <!-- Confirmation Modal -->
+        {% include 'components/confirmation_modal.html' %}
+
+        <!-- Toasts -->
+        {% include 'components/toasts.html' %}
+    </div>
+
+    <!-- Load module files first to ensure they are available globally -->
+    <script src="{{ url_for('static', filename='js/modules/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/path-management.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/file-operations/scan.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/file-operations/space.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/file-operations/modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/file-operations/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/file-filtering.js') }}"></script>
+    <!-- Removed virtual-list.js as it's no longer needed -->
+    
+    <!-- Then load app initialization scripts -->
+    <script src="{{ url_for('static', filename='js/processing.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    
+    <!-- Direct path manipulation script -->
+    <script src="{{ url_for('static', filename='js/path-fixer.js') }}"></script>
+
+</body>
+</html>

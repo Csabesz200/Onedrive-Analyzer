@@ -1,0 +1,77 @@
+<!-- View Mode and Filtering Controls - DaisyUI Style -->
+<div class="flex flex-col md:flex-row justify-between items-center p-4 border-b">
+    <!-- View Mode and Filters -->
+    <div class="flex flex-wrap gap-3 items-center">
+        <!-- View Mode Toggle -->
+        <div class="btn-group">
+            <button 
+                @click="viewMode = 'cards'" 
+                :class="viewMode === 'cards' ? 'btn-active' : ''"
+                class="btn btn-sm"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <rect width="7" height="7" x="3" y="3" rx="1"/>
+                    <rect width="7" height="7" x="14" y="3" rx="1"/>
+                    <rect width="7" height="7" x="14" y="14" rx="1"/>
+                    <rect width="7" height="7" x="3" y="14" rx="1"/>
+                </svg>
+                Card View
+            </button>
+            <button 
+                @click="viewMode = 'table'" 
+                :class="viewMode === 'table' ? 'btn-active' : ''"
+                class="btn btn-sm"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M12 3v18"/>
+                    <rect width="18" height="18" x="3" y="3" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M3 15h18"/>
+                </svg>
+                Table View
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-2">
+            <!-- Cloud-Only Filter -->
+            <select 
+                @change="updateFilter('is_cloud_only', $event.target.value)" 
+                class="select select-bordered select-sm"
+            >
+                <option value="">All Files</option>
+                <option value="true">Cloud Only</option>
+                <option value="false">Local Files</option>
+            </select>
+
+            <!-- Sort By Dropdown -->
+            <select 
+                @change="updateSort($event.target.value)" 
+                class="select select-bordered select-sm"
+            >
+                <option value="size:desc">Size (Largest First)</option>
+                <option value="size:asc">Size (Smallest First)</option>
+                <option value="name:asc">Name (A-Z)</option>
+                <option value="name:desc">Name (Z-A)</option>
+                <option value="last_modified:desc">Recent First</option>
+                <option value="last_modified:asc">Oldest First</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats shadow-sm mt-3 md:mt-0">
+        <div class="stat p-2">
+            <div class="stat-title">Total Files</div>
+            <div class="stat-value text-lg" x-text="stats.total_files"></div>
+        </div>
+        <div class="stat p-2">
+            <div class="stat-title">Total Size</div>
+            <div class="stat-value text-lg" x-text="stats.human_total_size"></div>
+        </div>
+        <div class="stat p-2" x-show="pagination && pagination.page && pagination.total_pages">
+            <div class="stat-title">Page</div>
+            <div class="stat-value text-lg" x-text="`${pagination.page} / ${pagination.total_pages}`"></div>
+        </div>
+    </div>
+</div>

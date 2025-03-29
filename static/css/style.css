@@ -1,0 +1,377 @@
+/* Progress bar animation */
+@keyframes progress {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}/* Custom styles beyond Tailwind */
+
+/* Processing and status indicators */
+.processing {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.processing::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="none" stroke="%233B82F6" stroke-width="4" opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" fill="none" stroke="%233B82F6" stroke-width="4" stroke-linecap="round"/></svg>') no-repeat center center;
+    background-size: 24px 24px;
+    border-radius: inherit;
+    z-index: 10;
+    animation: spin 1s linear infinite;
+}
+
+.file-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.file-status-cloud {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.file-status-local {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.file-status-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.file-status-processing {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* Folder View Styles */
+.folder-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.folder-header.shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.folder-files {
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.folder-name {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.folder-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.folder-name:hover::after {
+    background-color: #3B82F6;
+}
+
+.progress-bar-animated {
+    background: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb, #3b82f6, #60a5fa);
+    background-size: 200% 200%;
+    animation: progress 2s ease infinite;
+}
+
+/* Card view styles */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.file-icon-large {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.card-file-name {
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: #1F2937;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-file-path {
+    font-size: 0.75rem;
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-metadata {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-metadata-item {
+    font-size: 0.875rem;
+    color: #6B7280;
+}
+
+.card-metadata-label {
+    font-weight: 500;
+    margin-right: 0.25rem;
+}
+
+/* View mode toggle buttons */
+.view-toggle {
+    display: flex;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.view-toggle-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.view-toggle-btn.active {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.view-toggle-btn:not(.active) {
+    background-color: white;
+    color: #4B5563;
+}
+
+.view-toggle-btn:hover:not(.active) {
+    background-color: #F3F4F6;
+}
+
+/* Ensure toast notifications stack correctly and are visible */
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Enhanced toast styling */
+.toast {
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    animation: toast-in 0.3s ease forwards;
+}
+
+/* Toast animations */
+@keyframes toast-in {
+    0% {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-1rem);
+        opacity: 0;
+    }
+}
+
+/* Toast variants */
+.toast-success {
+    background-color: #10B981;
+    color: white;
+    border-left: 4px solid #059669;
+}
+
+.toast-error {
+    background-color: #EF4444;
+    color: white;
+    border-left: 4px solid #B91C1C;
+}
+
+.toast-info {
+    background-color: #3B82F6;
+    color: white;
+    border-left: 4px solid #2563EB;
+}
+
+.toast-warning {
+    background-color: #F59E0B;
+    color: white;
+    border-left: 4px solid #D97706;
+}
+
+/* Toast content */
+.toast-icon {
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.toast-message {
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Transitions for UI elements */
+.transition-colors {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Truncate long filenames */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* File icon colors */
+.file-icon-doc {
+    color: #4285f4;
+}
+
+.file-icon-excel {
+    color: #0f9d58;
+}
+
+.file-icon-pdf {
+    color: #db4437;
+}
+
+.file-icon-default {
+    color: #7e7e7e;
+}
+
+/* Add some depth to cards */
+.shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Status badges */
+.status-badge-local {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge-cloud {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+/* Folder path display */
+.relative-folder-path {
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Improve button focus states */
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .text-3xl {
+        font-size: 1.5rem;
+    }
+}

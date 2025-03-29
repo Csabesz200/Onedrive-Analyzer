@@ -1,0 +1,93 @@
+<div class="card w-full bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
+            <h2 class="card-title">Scan Options</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text mr-2">Folder Depth:</span>
+                        <select x-model="maxDepth" class="select select-bordered select-sm">
+                            <option value="1">1 level</option>
+                            <option value="2">2 levels</option>
+                            <option value="3">3 levels</option>
+                            <option value="4">4 levels</option>
+                            <option value="-1">Unlimited (recursive)</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text mr-2">Use Multithreading</span>
+                        <input type="checkbox" x-model="useThreads" class="toggle toggle-primary" />
+                    </label>
+                </div>
+                <div class="form-control" x-show="useThreads">
+                    <label class="label cursor-pointer">
+                        <span class="label-text mr-2">Threads:</span>
+                        <select x-model="maxWorkers" class="select select-bordered select-sm">
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current OneDrive Path -->
+        <div class="alert mb-4">
+            <div>
+                <div class="font-bold">Current OneDrive Path:</div>
+                <p x-show="isPathConfigured" class="text-sm font-mono" x-text="onedrivePath"></p>
+                <p x-show="!isPathConfigured" class="text-sm text-error">Not configured. Please set your OneDrive path before scanning.</p>
+            </div>
+            <div class="flex-none">
+                <button 
+                    @click="openPathConfig()" 
+                    class="btn btn-sm btn-primary">
+                    Change Path
+                </button>
+            </div>
+        </div>
+        
+        <button 
+            @click="scanFiles()" 
+            class="btn btn-primary w-full"
+            :disabled="isLoading">
+            <span x-show="!isLoading">Scan OneDrive Files</span>
+            <span x-show="isLoading">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Scanning...
+            </span>
+        </button>
+        
+        <!-- Scanning Progress Indicator -->
+        <div x-show="showScanningIndicator" class="mt-4 alert alert-info">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="animate-spin stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span x-text="scanStatus"></span>
+            </div>
+        </div>
+        
+        <!-- Progress bar -->
+        <div x-show="showScanningIndicator" class="mt-4">
+            <div class="flex justify-between mb-1">
+                <span class="text-sm">Progress</span>
+                <span class="text-sm font-medium" x-text="Math.round(scanProgress) + '%'"></span>
+            </div>
+            <progress class="progress progress-primary w-full" :value="scanProgress" max="100"></progress>
+            
+            <!-- Current operation message -->
+            <div class="mt-4">
+                <div class="text-sm font-medium mb-1">Current file:</div>
+                <div class="bg-base-200 p-2 rounded border overflow-x-auto">
+                    <p class="text-sm font-mono whitespace-nowrap" x-text="scanMessage || scanStatus['current_directory'] || 'Initializing...'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

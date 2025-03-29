@@ -1,0 +1,60 @@
+/* Table column fixes for OnedriveSpaceCleaner */
+
+/* Custom tooltip */
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+    z-index: 50;
+}
+
+/* Make tooltips work in dark mode */
+[data-theme='dark'] .bg-gray-800 {
+    background-color: #1f2937;
+}
+
+[data-theme='dark'] .text-white {
+    color: #f3f4f6;
+}
+
+/* Ensure proper folder column appearance */
+.folder-column {
+    min-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Ensure file name column has proper spacing */
+.filename-column {
+    min-width: 250px;
+}
+
+/* Fix filename truncation */
+.file-name {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Path display styles */
+.path-display {
+    font-size: 0.75rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    cursor: pointer;
+}
+
+/* Hover effect for clickable paths */
+.path-display:hover, 
+.file-path:hover {
+    text-decoration: underline;
+    color: #3b82f6;
+}
+
+/* Make sure parent folder name is bold in folder column */
+.folder-name {
+    font-weight: 500;
+}
