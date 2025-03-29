@@ -20,7 +20,7 @@
             <template x-if="pagination.page > 1">
                 <button 
                     class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" 
-                    @click="scanFiles(pagination.page - 1)"
+                    @click="scanFiles(pagination.page - 1, false)"
                 >
                     Previous
                 </button>
@@ -29,7 +29,7 @@
             <!-- Current page indicator -->
             <div class="btn-group">
                 <template x-if="pagination.page > 1">
-                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(1)">1</button>
+                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(1, false)">1</button>
                 </template>
                 
                 <template x-if="pagination.page > 3">
@@ -37,13 +37,13 @@
                 </template>
                 
                 <template x-if="pagination.page > 2">
-                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.page - 1)" x-text="pagination.page - 1"></button>
+                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.page - 1, false)" x-text="pagination.page - 1"></button>
                 </template>
                 
                 <button class="btn btn-sm bg-[#0078d4] hover:bg-[#106ebe] text-white border-[#0078d4]" x-text="pagination.page"></button>
                 
                 <template x-if="pagination.page < pagination.total_pages - 1">
-                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.page + 1)" x-text="pagination.page + 1"></button>
+                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.page + 1, false)" x-text="pagination.page + 1"></button>
                 </template>
                 
                 <template x-if="pagination.page < pagination.total_pages - 2">
@@ -51,7 +51,7 @@
                 </template>
                 
                 <template x-if="pagination.page < pagination.total_pages">
-                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.total_pages)" x-text="pagination.total_pages"></button>
+                    <button class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" @click="scanFiles(pagination.total_pages, false)" x-text="pagination.total_pages"></button>
                 </template>
             </div>
             
@@ -59,7 +59,7 @@
             <template x-if="pagination.page < pagination.total_pages">
                 <button 
                     class="btn btn-sm bg-base-200 hover:bg-base-300 text-base-content border-base-300" 
-                    @click="scanFiles(pagination.page + 1)"
+                    @click="scanFiles(pagination.page + 1, false)"
                 >
                     Next
                 </button>
@@ -77,25 +77,23 @@
                     <option value="200" :selected="pagination.per_page == 200">200</option>
                 </select>
                 
+
                 <button
-                    @click="scanFiles(1)"
-                    class="btn btn-sm btn-outline hover:bg-[#0078d4] hover:border-[#0078d4] border-[#0078d4] text-[#0078d4] hover:text-white ml-4"
+                    @click="forceRescan()"
+                    class="btn btn-sm hover:bg-[#0078d4] hover:border-[#0078d4] border-[#0078d4] text-white hover:text-white ml-4 bg-[#0078d4]"
+                    title="Force a fresh scan of the OneDrive folder"
                 >
-                    Refresh
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                        <path d="M8 16H3v5"/>
+                    </svg>
+                    Rescan
                 </button>
             </div>
         </div>
     </div>
 </template>
 
-<!-- Always show a refresh button if there are files but only one page -->
-<template x-if="pagination && pagination.total_pages <= 1 && files.length > 0">
-    <div class="p-4 border-t border-base-300 flex justify-center">
-        <button
-            @click="scanFiles(1)"
-            class="btn btn-sm btn-outline hover:bg-[#0078d4] hover:border-[#0078d4] border-[#0078d4] text-[#0078d4] hover:text-white"
-        >
-            Refresh
-        </button>
-    </div>
-</template>
+

@@ -18,7 +18,10 @@
                         ></span>
                         <span class="text-sm" x-text="file.human_size"></span>
                     </div>
-                    <h3 class="font-medium truncate" x-text="file.name"></h3>
+                    <div class="flex items-center gap-2">
+                        <div x-html="getFileTypeIcon(file.name)"></div>
+                        <h3 class="font-medium truncate" x-text="file.name"></h3>
+                    </div>
                     <div class="text-sm opacity-70 truncate relative-folder-path" x-text="file.relative_folder_path"></div>
                     <div class="card-actions justify-between mt-3">
                         <template x-if="!file.is_cloud_only">
@@ -62,7 +65,11 @@
                     <tr>
                         <td class="opacity-70"><span class="relative-folder-path" x-text="file.relative_folder_path"></span></td>
                         <td class="max-w-xs">
-                            <div class="truncate max-w-[300px]" x-text="file.name"></div>
+                            <div class="flex items-center gap-2">
+                                <!-- File Type Icon - using Lucide icons based on file extension -->
+                                <div x-html="getFileTypeIcon(file.name)"></div>
+                                <div class="truncate max-w-[300px]" x-text="file.name"></div>
+                            </div>
                         </td>
                         <td class="text-right" x-text="file.human_size"></td>
                         <td class="text-center">

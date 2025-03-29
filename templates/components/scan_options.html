@@ -1,7 +1,18 @@
 <div class="card w-full bg-base-100 shadow-xl mb-8">
     <div class="card-body">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
-            <h2 class="card-title">Scan Options</h2>
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-scan inline-block align-middle mr-2">
+                    <rect width="8" height="5" x="2" y="14" rx="1" />
+                    <rect width="8" height="5" x="14" y="14" rx="1" />
+                    <path d="M2 9h20" />
+                    <path d="M6 5h12" />
+                    <path d="M6 19h12" />
+                </svg>
+                Scan Options
+            </h2>
             <div class="flex flex-wrap items-center gap-4">
                 <div class="form-control">
                     <label class="label cursor-pointer">
@@ -34,60 +45,59 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Current OneDrive Path -->
         <div class="alert mb-4">
             <div>
-                <div class="font-bold">Current OneDrive Path:</div>
+                <div class="font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-folder inline-block align-middle mr-1">
+                        <path d="M10 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z" />
+                    </svg>
+                    Current OneDrive Path:
+                </div>
                 <p x-show="isPathConfigured" class="text-sm font-mono" x-text="onedrivePath"></p>
-                <p x-show="!isPathConfigured" class="text-sm text-error">Not configured. Please set your OneDrive path before scanning.</p>
+                <p x-show="!isPathConfigured" class="text-sm text-error">Not configured. Please set your OneDrive
+                    path before scanning.</p>
             </div>
             <div class="flex-none">
-                <button 
-                    @click="openPathConfig()" 
-                    class="btn btn-sm btn-primary">
+                <button @click="openPathConfig()" class="btn btn-sm btn-primary hover:scale-105 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-settings-2 inline-block align-middle mr-1">
+                        <path d="M12 8v8" />
+                        <path
+                            d="M15.89 6.34L14.55 5a2 2 0 0 0-2.83 0L9.46 6.34a2 2 0 0 0 0 2.83l1.34 1.34a2 2 0 0 0 2.83 0l1.34-1.34a2 2 0 0 0 0-2.83z" />
+                        <path
+                            d="M8.11 17.66L9.45 19a2 2 0 0 0 2.83 0l1.34-1.34a2 2 0 0 0 0-2.83L14.54 11a2 2 0 0 0-2.83 0L8.11 12.34a2 2 0 0 0 0 2.83z" />
+                    </svg>
                     Change Path
                 </button>
             </div>
         </div>
-        
-        <button 
-            @click="scanFiles()" 
-            class="btn btn-primary w-full"
+
+        <button @click="scanFiles(1, true)" class="btn btn-primary w-full hover:scale-105 transition-transform"
             :disabled="isLoading">
-            <span x-show="!isLoading">Scan OneDrive Files</span>
+            <span x-show="!isLoading">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-search inline-block align-middle mr-2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Scan OneDrive Files
+            </span>
             <span x-show="isLoading">
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
                 </svg>
                 Scanning...
             </span>
         </button>
-        
-        <!-- Scanning Progress Indicator -->
-        <div x-show="showScanningIndicator" class="mt-4 alert alert-info">
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="animate-spin stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span x-text="scanStatus"></span>
-            </div>
-        </div>
-        
-        <!-- Progress bar -->
-        <div x-show="showScanningIndicator" class="mt-4">
-            <div class="flex justify-between mb-1">
-                <span class="text-sm">Progress</span>
-                <span class="text-sm font-medium" x-text="Math.round(scanProgress) + '%'"></span>
-            </div>
-            <progress class="progress progress-primary w-full" :value="scanProgress" max="100"></progress>
-            
-            <!-- Current operation message -->
-            <div class="mt-4">
-                <div class="text-sm font-medium mb-1">Current file:</div>
-                <div class="bg-base-200 p-2 rounded border overflow-x-auto">
-                    <p class="text-sm font-mono whitespace-nowrap" x-text="scanMessage || scanStatus['current_directory'] || 'Initializing...'"></p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

@@ -7,36 +7,40 @@
             <button 
                 @click="viewMode = 'cards'" 
                 :class="viewMode === 'cards' ? 'btn-active' : ''"
-                class="btn btn-sm"
+                class="btn btn-sm hover:scale-105 transition-transform"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                    <rect width="7" height="7" x="3" y="3" rx="1"/>
-                    <rect width="7" height="7" x="14" y="3" rx="1"/>
-                    <rect width="7" height="7" x="14" y="14" rx="1"/>
-                    <rect width="7" height="7" x="3" y="14" rx="1"/>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 lucide lucide-grid">
+                    <rect width="7" height="7" x="3" y="3" rx="1" />
+                    <rect width="7" height="7" x="14" y="3" rx="1" />
+                    <rect width="7" height="7" x="14" y="14" rx="1" />
+                    <rect width="7" height="7" x="3" y="14" rx="1" />
                 </svg>
                 Card View
             </button>
             <button 
                 @click="viewMode = 'table'" 
                 :class="viewMode === 'table' ? 'btn-active' : ''"
-                class="btn btn-sm"
+                class="btn btn-sm hover:scale-105 transition-transform"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                    <path d="M12 3v18"/>
-                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                    <path d="M3 9h18"/>
-                    <path d="M3 15h18"/>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 lucide lucide-list">
+                    <line x1="3" y1="9" x2="21" y2="9" />
+                    <line x1="3" y1="15" x2="21" y2="15" />
+                    <line x1="3" y1="5" x2="3" y2="5" />
+                    <line x1="3" y1="21" x2="3" y2="21" />
+                    <line x1="21" y1="5" x2="21" y2="5" />
+                    <line x1="21" y1="9" x2="21" y2="9" />
+                    <line x1="21" y1="15" x2="21" y2="15" />
+                    <line x1="21" y1="21" x2="21" y2="21" />
                 </svg>
                 Table View
             </button>
         </div>
 
         <!-- Filters -->
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 items-center">
             <!-- Cloud-Only Filter -->
             <select 
-                @change="updateFilter('is_cloud_only', $event.target.value)" 
+                @change="updateFilter('is_cloud_only', $event.target.value); scanFiles(1, false)" 
                 class="select select-bordered select-sm"
             >
                 <option value="">All Files</option>
@@ -46,7 +50,7 @@
 
             <!-- Sort By Dropdown -->
             <select 
-                @change="updateSort($event.target.value)" 
+                @change="updateSort($event.target.value); scanFiles(1, false)" 
                 class="select select-bordered select-sm"
             >
                 <option value="size:desc">Size (Largest First)</option>
@@ -56,6 +60,30 @@
                 <option value="last_modified:desc">Recent First</option>
                 <option value="last_modified:asc">Oldest First</option>
             </select>
+
+            <!-- Search Bar - KEY CHANGE: REMOVE w-full max-w-xs and added flex-grow -->
+            <input 
+                type="text"
+                x-model.debounce.500ms="searchQuery"
+                @keydown.enter="scanFiles(1, false)"
+                class="input input-bordered input-sm flex-grow" 
+                placeholder="Search files..."
+            />
+
+            <!-- Refresh Button -->
+            <button 
+                @click="scanFiles(1, true)"
+                class="btn btn-sm btn-primary hover:scale-105 transition-transform"
+                title="Force a fresh scan of the OneDrive folder"
+            >
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 12a9 9 0 0 1 9 9 9.75 9.75 0 0 1 6.74-2.74L21 16" />
+                    <polyline points="21 8 17 3 21 3" />
+                    <polyline points="3 16 7 21 3 21" />
+                </svg>
+                Refresh
+            </button>
         </div>
     </div>
 

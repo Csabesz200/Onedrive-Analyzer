@@ -214,5 +214,103 @@ window.oneDriveUtils = {
         
         appData.stats.human_local_size = this.humanizeSize(appData.stats.local_size);
         appData.stats.potential_savings = appData.stats.human_local_size;
+    },
+
+    /**
+     * Get an appropriate Lucide icon based on file type
+     * @param {string} filename - The filename to analyze
+     * @returns {string} - HTML for the Lucide icon
+     */
+    getFileTypeIcon: function(filename) {
+        if (!filename) return this.getIconSvg('file');
+        
+        // Get the extension
+        const ext = filename.split('.').pop().toLowerCase();
+        let color = this.getFileColor(ext);
+
+        // Document types
+        const docTypes = ['doc', 'docx', 'odt', 'rtf', 'txt', 'md', 'pages'];
+        const spreadsheetTypes = ['xls', 'xlsx', 'csv', 'ods', 'numbers'];
+        const presentationTypes = ['ppt', 'pptx', 'odp', 'key'];
+        const pdfTypes = ['pdf'];
+        const codeTypes = ['js', 'py', 'java', 'c', 'cpp', 'cs', 'php', 'html', 'css', 'rb', 'go', 'rs', 'ts', 'json', 'xml', 'sql', 'sh'];
+        const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'raw', 'psd', 'ai', 'eps'];
+        const videoTypes = ['mp4', 'mov', 'wmv', 'avi', 'mkv', 'flv', 'webm'];
+        const audioTypes = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a'];
+        const archiveTypes = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2'];
+        const executableTypes = ['exe', 'msi', 'bat', 'com', 'app', 'dmg'];
+        const databaseTypes = ['db', 'sqlite', 'mdb', 'accdb'];
+        
+        // Return appropriate icon based on type
+        if (docTypes.includes(ext)) return this.getIconSvg('file-text', color);
+        if (spreadsheetTypes.includes(ext)) return this.getIconSvg('table', color);
+        if (presentationTypes.includes(ext)) return this.getIconSvg('presentation', color);
+        if (pdfTypes.includes(ext)) return this.getIconSvg('file-text', color);
+        if (codeTypes.includes(ext)) return this.getIconSvg('code', color);
+        if (imageTypes.includes(ext)) return this.getIconSvg('image', color);
+        if (videoTypes.includes(ext)) return this.getIconSvg('video', color);
+        if (audioTypes.includes(ext)) return this.getIconSvg('music', color);
+        if (archiveTypes.includes(ext)) return this.getIconSvg('archive', color);
+        if (executableTypes.includes(ext)) return this.getIconSvg('terminal', color);
+        if (databaseTypes.includes(ext)) return this.getIconSvg('database', color);
+        
+        // Default to generic file icon
+        return this.getIconSvg('file', color);
+    },
+
+    /**
+     * Defines file extension to color association
+     * @param {string} ext - The file extension
+     * @returns {string} - The color for the file icon
+    */
+    getFileColor: function(ext) {
+        const colorMap = {
+            'doc': '#29ABE2',
+            'docx': '#29ABE2',
+            'pdf': '#E22929',
+            'xls': '#229954',
+            'xlsx': '#229954',
+            'ppt': '#E67E22',
+            'pptx': '#E67E22',
+            'jpg': '#F1C40F',
+            'jpeg': '#F1C40F',
+            'png': '#F1C40F',
+            'mp4': '#9B59B6',
+            'mov': '#9B59B6',
+            'zip': '#34495E',
+            'rar': '#34495E',
+            'js': '#F3DE8A',
+            'java': '#F3DE8A',
+            'py': '#F3DE8A'
+        };
+        return colorMap[ext] || '#999999'; // Default gray
+    },
+    
+    /**
+     * Get SVG markup for a Lucide icon
+     * @param {string} iconName - The name of the Lucide icon
+     * @param {string} color - The color to apply to the icon
+     * @returns {string} - The SVG markup
+     */
+    getIconSvg: function(iconName, color = '#999999') {
+        const colorAttribute = `stroke="${color}"`;
+
+        // Collection of Lucide icons as SVGs
+        const icons = {
+            'file': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+            'file-text': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
+            'table': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>`,
+            'presentation': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>`,
+            'code': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+            'image': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+            'video': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2" ry="2"/></svg>`,
+            'music': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+            'archive': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h8"/></svg>`,
+            'terminal': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
+            'database': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" ${colorAttribute} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`
+        };
+        
+        // Return the icon or default file icon if not found
+        return icons[iconName] || icons['file'];
     }
 };

@@ -1,17 +1,23 @@
-<!-- Path Configuration Modal using DaisyUI -->
 <input type="checkbox" id="path-config-modal" class="modal-toggle" :checked="showPathConfig" />
 <div class="modal" :class="showPathConfig ? 'modal-open' : ''">
     <div class="modal-box relative">
         <button @click="closePathConfig()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
-        
-        <h3 class="text-lg font-bold">Configure OneDrive Path</h3>
+
+        <h3 class="text-lg font-bold"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" class="lucide lucide-settings-2 inline-block align-middle mr-1">
+                <path d="M12 8v8" />
+                <path
+                    d="M15.89 6.34L14.55 5a2 2 0 0 0-2.83 0L9.46 6.34a2 2 0 0 0 0 2.83l1.34 1.34a2 2 0 0 0 2.83 0l1.34-1.34a2 2 0 0 0 0-2.83z" />
+                <path
+                    d="M8.11 17.66L9.45 19a2 2 0 0 0 2.83 0l1.34-1.34a2 2 0 0 0 0-2.83L14.54 11a2 2 0 0 0-2.83 0L8.11 12.34a2 2 0 0 0 0 2.83z" />
+            </svg>Configure OneDrive Path</h3>
         <p class="py-2 opacity-80">Please manually enter or paste the full path to your OneDrive folder.</p>
-        
+
         <!-- Path Input -->
         <div class="form-control w-full mt-2">
             <label class="label">
                 <span class="label-text">OneDrive Path</span>
-            </label>
             <input 
                 type="text" 
                 x-model="newOnedrivePath" 

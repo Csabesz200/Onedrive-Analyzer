@@ -7,6 +7,7 @@ from datetime import datetime
 from .file_analyzer import DirectoryScanner, is_onedrive_cloud_only
 from .onedrive_utils import make_file_cloud_only
 from .config import get_onedrive_path, update_onedrive_path
+from .database import get_scan_results, store_scan_results
 
 # Global variable to track scan status
 scan_status = {
@@ -17,6 +18,21 @@ scan_status = {
     'total_estimate': 100,
     'last_updated': None
 }
+
+# Reset the scan status if the app restarts
+def reset_scan_status():
+    global scan_status
+    scan_status = {
+        'status': 'Idle',
+        'progress': 0,
+        'current_directory': '',
+        'files_processed': 0,
+        'total_estimate': 100,
+        'last_updated': datetime.now()
+    }
+
+# Reset the status on startup
+reset_scan_status()
 
 def init_routes(app):
     """Initialize all API routes for the Flask application"""
@@ -64,20 +80,78 @@ def init_routes(app):
         # If scan hasn't been started or is very old, reset status
         if scan_status['last_updated'] is None or \
            (datetime.now() - scan_status['last_updated']).total_seconds() > 300:  # 5 minutes timeout
-            scan_status = {
-                'status': 'Idle',
-                'progress': 0,
-                'current_directory': '',
-                'files_processed': 0,
-                'total_estimate': 100,
-                'last_updated': None
-            }
+            reset_scan_status()
+        
+        # Calculate percentage progress based on files processed and estimated total
+        if scan_status['total_estimate'] > 0 and scan_status['files_processed'] >= 0:
+            progress_pct = min(100, (scan_status['files_processed'] / scan_status['total_estimate']) * 100)
+            scan_status['progress'] = round(progress_pct)
+        
+        # Add time elapsed if we're in an active scan
+        if scan_status['last_updated'] and scan_status['status'] != 'Idle':
+            time_elapsed = (datetime.now() - scan_status['last_updated']).total_seconds()
+            scan_status['time_elapsed'] = round(time_elapsed)
+            
+            # If we're scanning but haven't updated status in 10 seconds, mark as possibly stalled
+            if time_elapsed > 10 and scan_status['status'] != 'Scan complete':
+                if 'Scanning' in scan_status['status'] or 'Processing' in scan_status['status']:
+                    scan_status['status'] = 'Processing... (This may take a while)'
         
         return jsonify(scan_status)
+        
+    @app.route('/api/scan-all')
+    def api_scan_all():
+        """API endpoint to scan the OneDrive directory and return all files at once"""
+        # Get the OneDrive path from config
+        onedrive_path = get_onedrive_path()
+        
+        # Check if OneDrive path is configured
+        if not onedrive_path or not os.path.exists(onedrive_path) or not os.path.isdir(onedrive_path):
+            return jsonify({
+                'success': False,
+                'message': 'OneDrive path is not configured or is invalid. Please configure it in the settings.'
+            }), 400
+        
+        # Scan parameters
+        max_depth = request.args.get('max_depth', default=2, type=int)
+        use_threads = request.args.get('use_threads', default=True, type=lambda v: v.lower() == 'true')
+        max_workers = request.args.get('max_workers', default=4, type=int)
+        
+        # Create a directory scanner with the global scan status
+        directory_scanner = DirectoryScanner(scan_status)
+        
+        # Scan the directory
+        files_info = directory_scanner.scan_directory(
+            onedrive_path, 
+            max_depth, 
+            use_threads=use_threads, 
+            max_workers=max_workers
+        )
+        
+        # Calculate statistics for the total set
+        total_files_count = len(files_info)
+        local_files = sum(1 for file in files_info if not file.get('is_cloud_only', False))
+        remote_files = sum(1 for file in files_info if file.get('is_cloud_only', False))
+        total_size = sum(file.get('size', 0) for file in files_info)
+        local_size = sum(file.get('size', 0) for file in files_info if not file.get('is_cloud_only', False))
+        
+        return jsonify({
+            'files': files_info,
+            'stats': {
+                'total_files': total_files_count,
+                'local_files': local_files,
+                'remote_files': remote_files,
+                'total_size': total_size,
+                'human_total_size': humanize.naturalsize(total_size),
+                'local_size': local_size,
+                'human_local_size': humanize.naturalsize(local_size),
+                'potential_savings': humanize.naturalsize(local_size)
+            }
+        })
 
     @app.route('/api/scan')
     def api_scan():
-        """API endpoint to scan the OneDrive directory with pagination support"""
+        """API endpoint to scan the OneDrive directory with database-backed pagination"""
         # Get pagination parameters
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 50, type=int)
@@ -91,6 +165,7 @@ def init_routes(app):
         
         # Get filter parameters
         is_cloud_only = request.args.get('is_cloud_only', type=lambda v: v.lower() == 'true')
+        search_query = request.args.get('search_query', '')
         
         # Get the OneDrive path from config
         onedrive_path = get_onedrive_path()
@@ -102,7 +177,37 @@ def init_routes(app):
                 'message': 'OneDrive path is not configured or is invalid. Please configure it in the settings.'
             }), 400
         
-        # Scan parameters
+        # Create filters dictionary
+        filters = {
+            'is_cloud_only': is_cloud_only,
+            'search_query': search_query
+        }
+        
+        # Create sort options dictionary
+        sort_options = {
+            'column': sort_by,
+            'direction': sort_order
+        }
+        
+        # Check if we need to perform a new scan or can use cached data
+        cached_results = get_scan_results(
+            onedrive_path, 
+            page=page, 
+            per_page=per_page,
+            filters=filters,
+            sort_options=sort_options
+        )
+        
+        # If we have recent cached results and are not forcing a rescan, use them
+        force_rescan = request.args.get('force_rescan', 'false').lower() == 'true'
+        
+        if cached_results and not force_rescan:
+            # Add last scan time to the response
+            cached_results['cache_used'] = True
+            return jsonify(cached_results)
+        
+        # Otherwise, perform a new scan
+        # Get scan parameters
         max_depth = request.args.get('max_depth', default=2, type=int)
         use_threads = request.args.get('use_threads', default=True, type=lambda v: v.lower() == 'true')
         max_workers = request.args.get('max_workers', default=4, type=int)
