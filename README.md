@@ -2,7 +2,7 @@
 
 A Flask-based web application that analyzes your OneDrive folder, showing which files are stored locally versus in the cloud, and helping you free up disk space with simple controls.
 
-![OneDrive Analyzer Screenshot](docs/Demo.mov)
+![OneDrive Analyzer Screenshot](docs/Demo.gif)
 
 ## ✨ What This Tool Does
 
